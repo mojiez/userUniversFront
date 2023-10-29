@@ -19,7 +19,7 @@ import { Alert, message, Tabs } from 'antd';
 import React, { useState } from 'react';
 import { history, useModel } from 'umi';
 import styles from './index.less';
-import { SYSTEM_LOGO } from '@/ constants/index';
+import { SYSTEM_LOGO, USER_ADMIN_LINK } from '@/ constants/index';
 const LoginMessage: React.FC<{
   content: string;
 }> = ({ content }) => (
@@ -84,24 +84,26 @@ const Login: React.FC = () => {
           initialValues={{
             autoLogin: true,
           }}
-          actions={[
-            '其他登录方式 :',
-            <AlipayCircleOutlined key="AlipayCircleOutlined" className={styles.icon} />,
-            <TaobaoCircleOutlined key="TaobaoCircleOutlined" className={styles.icon} />,
-            <WeiboCircleOutlined key="WeiboCircleOutlined" className={styles.icon} />,
-          ]}
+          // actions={[
+          //   '其他登录方式 :',
+          //   <AlipayCircleOutlined key="AlipayCircleOutlined" className={styles.icon} />,
+          //   <TaobaoCircleOutlined key="TaobaoCircleOutlined" className={styles.icon} />,
+          //   <WeiboCircleOutlined key="WeiboCircleOutlined" className={styles.icon} />,
+          // ]}
           onFinish={async (values) => {
             await handleSubmit(values as API.LoginParams);
           }}
         >
           <Tabs activeKey={type} onChange={setType}>
             <Tabs.TabPane key="account" tab={'账户密码登录'} />
-            <Tabs.TabPane key="mobile" tab={'手机号登录'} />
+            {/* <Tabs.TabPane key="mobile" tab={'手机号登录'} /> */}
           </Tabs>
 
           {status === 'error' && loginType === 'account' && (
             <LoginMessage content={'错误的用户名和密码(admin/ant.design)'} />
           )}
+          {/* 如果说状态是error 并且 是通过用户名登录的 就显示一个LoginMessage组件 */}
+
           {type === 'account' && (
             <>
               <ProFormText
@@ -135,6 +137,7 @@ const Login: React.FC = () => {
             </>
           )}
 
+          {/*
           {status === 'error' && loginType === 'mobile' && <LoginMessage content="验证码错误" />}
           {type === 'mobile' && (
             <>
@@ -190,6 +193,8 @@ const Login: React.FC = () => {
               />
             </>
           )}
+
+              */}
           <div
             style={{
               marginBottom: 24,
@@ -202,6 +207,11 @@ const Login: React.FC = () => {
               style={{
                 float: 'right',
               }}
+              href={USER_ADMIN_LINK}
+              target="_blank"
+              rel="noreferer"
+              // target这个属性说明新建窗口打开
+              // 表示不要发送 HTTP Referer 头。这通常用于隐私保护，以防止链接目标网站知道您是从哪个网页跳转过去的。
             >
               忘记密码 ?
             </a>
