@@ -1,5 +1,6 @@
 import { GithubOutlined } from '@ant-design/icons';
 import { DefaultFooter } from '@ant-design/pro-components';
+import { USER_ADMIN_LINK } from '@/ constants/index';
 const Footer: React.FC = () => {
   const defaultMessage = '前台界面模版zkj';
   const currentYear = new Date().getFullYear();
@@ -16,7 +17,7 @@ const Footer: React.FC = () => {
         {
           key: 'github',
           title: <GithubOutlined />,
-          href: 'https://github.com/ant-design/ant-design-pro',
+          href: USER_ADMIN_LINK,
           blankTarget: true,
         },
         // {

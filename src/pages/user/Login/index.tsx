@@ -19,6 +19,7 @@ import { Alert, message, Tabs } from 'antd';
 import React, { useState } from 'react';
 import { history, useModel } from 'umi';
 import styles from './index.less';
+import { SYSTEM_LOGO } from '@/ constants/index';
 const LoginMessage: React.FC<{
   content: string;
 }> = ({ content }) => (
@@ -77,9 +78,9 @@ const Login: React.FC = () => {
     <div className={styles.container}>
       <div className={styles.content}>
         <LoginForm
-          logo={<img alt="logo" src="/logo.svg" />}
-          title="Ant Design"
-          subTitle={'Ant Design 是西湖区最具影响力的 Web 设计规范'}
+          logo={<img alt="dick" src={SYSTEM_LOGO} />}
+          title="userAtdp"
+          subTitle={'userAtdp用户前台界面'}
           initialValues={{
             autoLogin: true,
           }}
