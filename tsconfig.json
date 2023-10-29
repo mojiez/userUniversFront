@@ -1,5 +1,8 @@
 {
   "compilerOptions": {
+    "ignoreDeprecations": "5.0",
+    //这将告诉 TypeScript 在 5.0 版本之后的弃用警告中忽略 suppressImplicitAnyIndexErrors
+    // 忽略与 TypeScript 版本 5.0 之后引入的弃用警告相关的内容
     "outDir": "build/dist",
     "module": "esnext",
     "target": "esnext",
