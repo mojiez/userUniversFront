@@ -93,6 +93,9 @@ const Login: React.FC = () => {
           onFinish={async (values) => {
             await handleSubmit(values as API.LoginParams);
           }}
+          // 时间处理函数 在表单提交后执行 参数values是表单中的数据
+          // await等待一个异步操作的完成
+          // handleSubmit 异步函数的调用 将value作为参数传递
         >
           <Tabs activeKey={type} onChange={setType}>
             <Tabs.TabPane key="account" tab={'账户密码登录'} />
@@ -107,7 +110,7 @@ const Login: React.FC = () => {
           {type === 'account' && (
             <>
               <ProFormText
-                name="username"
+                name="account"
                 fieldProps={{
                   size: 'large',
                   prefix: <UserOutlined className={styles.prefixIcon} />,
