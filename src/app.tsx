@@ -6,13 +6,15 @@ import { PageLoading, SettingDrawer } from '@ant-design/pro-components';
 import type { RunTimeLayoutConfig } from 'umi';
 import { history, Link } from 'umi';
 import defaultSettings from '../config/defaultSettings';
-import { currentUser as queryCurrentUser } from './services/ant-design-pro/api';
+import { currentUser, currentUser as queryCurrentUser } from './services/ant-design-pro/api';
 import { ReactNode } from 'react';
 import { RequestConfig } from 'umi';
 
 const isDev = process.env.NODE_ENV === 'development';
 const loginPath = '/user/login';
 
+// 设置一个白名单
+const NO_NEED_LOGIN_WHITE_LIST = ['/user/Register', loginPath];
 /** 获取用户信息比较慢的时候会展示一个 loading */
 export const initialStateConfig = {
   loading: <PageLoading />,
@@ -46,20 +48,36 @@ export async function getInitialState(): Promise<{
   };
   // 如果不是登录页面，执行
   // 如果当前页面不是登陆页面（已经登陆过的页面 要返回用户信息）
-  if (history.location.pathname !== loginPath) {
-    //
-    const currentUser = await fetchUserInfo();
+
+  // 如果是无需登陆的页面 直接不执行fetchUserInfo:
+  if (NO_NEED_LOGIN_WHITE_LIST.includes(history.location.pathname)) {
     return {
       fetchUserInfo,
-      currentUser,
       settings: defaultSettings,
     };
   }
-  // 当前页面是登陆页面（不返回用户信息）
+
+  // 如果是需要登陆的页面 则执行fetchUserInfo 会进行页面跳转
+  const currentUser = await fetchUserInfo();
   return {
     fetchUserInfo,
+    currentUser,
     settings: defaultSettings,
   };
+  // if (history.location.pathname !== loginPath) {
+  //   //
+  //   const currentUser = await fetchUserInfo();
+  //   return {
+  //     fetchUserInfo,
+  //     currentUser,
+  //     settings: defaultSettings,
+  //   };
+  // }
+  // 当前页面是登陆页面（不返回用户信息）
+  // return {
+  //   fetchUserInfo,
+  //   settings: defaultSettings,
+  // };
 }
 
 // 配置request
@@ -77,9 +95,15 @@ export const layout: RunTimeLayoutConfig = ({ initialState, setInitialState }) =
     },
     footerRender: () => <Footer />,
     onPageChange: () => {
+      // 钩子函数 每次页面改变都会调用
       const { location } = history;
       // 如果没有登录，重定向到 login
-      if (!initialState?.currentUser && location.pathname !== loginPath) {
+      // if (!initialState?.currentUser && location.pathname !== loginPath) {
+      //   history.push(loginPath);
+      // }
+      // 如果是需要登陆的页面 重定向到 login
+      if (!initialState?.currentUser && !NO_NEED_LOGIN_WHITE_LIST.includes(location.pathname)) {
+        // currentUser为空 当前路径也不是不需要登陆就能查看的路径
         history.push(loginPath);
       }
     },

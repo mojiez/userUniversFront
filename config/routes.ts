@@ -3,7 +3,15 @@ export default [
     path: '/user',
     layout: false,
     routes: [
-      { name: '登录', path: '/user/login', component: './user/Login' },
+      {
+        path: '/user',
+        routes: [
+          { name: '登录', path: '/user/login', component: './user/Login' },
+          { name: '注册', path: '/user/register', component: './user/Register' },
+        ],
+      },
+      // { name: '登录', path: '/user/login', component: './user/Login' },
+      // { name: '注册', path: '/user/register', component: './user/Register' },
       { component: './404' },
     ],
   },
