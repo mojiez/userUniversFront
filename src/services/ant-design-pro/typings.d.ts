@@ -3,30 +3,54 @@
 
 declare namespace API {
   type CurrentUser = {
-    name?: string;
-    avatar?: string;
-    userid?: string;
+    // 查询数据库返回的东西
+
+    // name?: string;
+    // avatar?: string;
+    // userid?: string;
+    // email?: string;
+    // signature?: string;
+    // title?: string;
+    // group?: string;
+    // tags?: { key?: string; label?: string }[];
+    // notifyCount?: number;
+    // unreadCount?: number;
+    // country?: string;
+    // access?: string;
+    // geographic?: {
+    //   province?: { label?: string; key?: string };
+    //   city?: { label?: string; key?: string };
+    // };
+    // address?: string;
+    // phone?: string;
+
+    id?: number;
+    userName?: string;
+    userAccount?: string;
+    avatarUrl?: string;
+    gender?: number;
     email?: string;
-    signature?: string;
-    title?: string;
-    group?: string;
-    tags?: { key?: string; label?: string }[];
-    notifyCount?: number;
-    unreadCount?: number;
-    country?: string;
-    access?: string;
-    geographic?: {
-      province?: { label?: string; key?: string };
-      city?: { label?: string; key?: string };
-    };
-    address?: string;
+    userState?: number;
     phone?: string;
+    role?: number;
+    createTime?: Date;
+  };
+
+  type R = {
+    success?: boolean;
+    code?: number;
+    message?: string;
+    data?: Record<string, any>;
   };
 
   type LoginResult = {
-    status?: string;
+    // status?: string;
     type?: string;
-    currentAuthority?: string;
+    // currentAuthority?: string;
+    success?: boolean;
+    code?: number;
+    message?: string;
+    data?: Record<string, any>;
   };
 
   type PageParams = {

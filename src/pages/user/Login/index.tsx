@@ -1,5 +1,5 @@
 import Footer from '@/components/Footer';
-import { login } from '@/services/ant-design-pro/api';
+import { currentUser, login } from '@/services/ant-design-pro/api';
 import { getFakeCaptcha } from '@/services/ant-design-pro/login';
 import {
   AlipayCircleOutlined,
@@ -37,9 +37,16 @@ const Login: React.FC = () => {
   const [type, setType] = useState<string>('account');
   const { initialState, setInitialState } = useModel('@@initialState');
   const fetchUserInfo = async () => {
+    // 异步函数
     const userInfo = await initialState?.fetchUserInfo?.();
+    console.log('zhelishi USERINFO' + userInfo);
+    // 这行代码尝试从initial对象中获取fetchUserInfo方法
+    // 通过？来实现就算initialstate或者fetchUserInfo是null或者undefined也不会报错
     if (userInfo) {
+      console.log(userInfo);
+      // 如果取到了userinfo 就通过setInitialState修改InitialState的值
       await setInitialState((s) => ({
+        // s是当前InitialState的状态
         ...s,
         currentUser: userInfo,
       }));
@@ -52,16 +59,36 @@ const Login: React.FC = () => {
         ...values,
         type,
       });
-      if (msg.status === 'ok') {
+      if (msg.success === true) {
         const defaultLoginSuccessMessage = '登录成功！';
         message.success(defaultLoginSuccessMessage);
+        // login 返回的是msg msg成功以后调用fetchUserInfo
+
+        // fetchUserInfo 要干两件事：
+        // 1. 查询用户信息 已经有了 message里面 第二件事是更新状态
+
         await fetchUserInfo();
+        // console.log(msg.data);
+        // if (msg.data) {
+        //   await setInitialState((s) => ({
+        //     ...s,
+        //     currentUser: msg.data,
+        //   }));
+        // }
+        // console.log(initialState?.currentUser);
+
+        // 此时已经查询到了用户信息 并把用户状态也保存好了
         /** 此方法会跳转到 redirect 参数所在的位置 */
+        // history 是用于管理应用程序路由的对象，如果不存在history对象，可能是没有初始化 那就直接返回
+
         if (!history) return;
+        // location获取当前页面的位置信息
         const { query } = history.location;
+        // 对query进行结构
         const { redirect } = query as {
           redirect: string;
         };
+        // 实现路由跳转
         history.push(redirect || '/');
         return;
       }
@@ -73,7 +100,9 @@ const Login: React.FC = () => {
       message.error(defaultLoginFailureMessage);
     }
   };
-  const { status, type: loginType } = userLoginState;
+
+  const { success, type: loginType } = userLoginState;
+
   return (
     <div className={styles.container}>
       <div className={styles.content}>
@@ -102,7 +131,7 @@ const Login: React.FC = () => {
             {/* <Tabs.TabPane key="mobile" tab={'手机号登录'} /> */}
           </Tabs>
 
-          {status === 'error' && loginType === 'account' && (
+          {success === false && loginType === 'account' && (
             <LoginMessage content={'错误的用户名和密码(admin/ant.design)'} />
           )}
           {/* 如果说状态是error 并且 是通过用户名登录的 就显示一个LoginMessage组件 */}
@@ -121,6 +150,11 @@ const Login: React.FC = () => {
                     required: true,
                     message: '用户名是必填项！',
                   },
+                  {
+                    min: 4,
+                    type: 'string',
+                    message: '账户长度不能小于4',
+                  },
                 ]}
               />
               <ProFormText.Password
@@ -134,6 +168,11 @@ const Login: React.FC = () => {
                   {
                     required: true,
                     message: '密码是必填项！',
+                  },
+                  {
+                    min: 8,
+                    type: 'string',
+                    message: '长度不能小于8',
                   },
                 ]}
               />

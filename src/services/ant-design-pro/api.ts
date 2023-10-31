@@ -4,10 +4,15 @@ import { request } from 'umi';
 // request是umi提供的更方便的请求类，写起来比axios更方便
 
 /** 获取当前的用户 GET /api/currentUser */
+// 从数据库中获取当前的用户
 export async function currentUser(options?: { [key: string]: any }) {
   return request<{
-    data: API.CurrentUser;
-  }>('/api/currentUser', {
+    // request返回一个对象 这个对象包含一个data属性，其类型为API.CurrentUser
+    // data: API.CurrentUser;
+    data: {
+      currentUser: API.CurrentUser;
+    };
+  }>('/user/current', {
     method: 'GET',
     ...(options || {}),
   });

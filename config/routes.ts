@@ -20,5 +20,7 @@ export default [
   },
   { name: '查询表格', icon: 'table', path: '/list', component: './TableList' },
   { path: '/', redirect: '/welcome' },
+  // 表示访问根路径时会自动重定向到welcome页面
   { component: './404' },
+  // 访问未知路径时会自动重定向到404页面
 ];

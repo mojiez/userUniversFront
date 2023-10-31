@@ -21,23 +21,33 @@ export const initialStateConfig = {
 /**
  * @see  https://umijs.org/zh-CN/plugins/plugin-initial-state
  * */
+
+// getInitialState会返回一个对象
 export async function getInitialState(): Promise<{
   settings?: Partial<LayoutSettings>;
   currentUser?: API.CurrentUser;
   loading?: boolean;
   fetchUserInfo?: () => Promise<API.CurrentUser | undefined>;
+  // 这个属性是一个函数，他不接受任何参数并且返回一个Promise对象 这个Promise可以解析为CurrentUser或者undefined
 }> {
+  // 首先定义fetchUserInfo 这是一个异步函数 返回值为Promise 要么是CurrentUser 要么是undefined
   const fetchUserInfo = async () => {
     try {
+      // 这里执行查找当前用户的操作
+      // 在fetchUserInfo里面再查一遍？
       const msg = await queryCurrentUser();
-      return msg.data;
+      console.log(msg.data.currentUser);
+      return msg.data.currentUser;
     } catch (error) {
+      // 如果没找到 报错了
       history.push(loginPath);
     }
     return undefined;
   };
   // 如果不是登录页面，执行
+  // 如果当前页面不是登陆页面（已经登陆过的页面 要返回用户信息）
   if (history.location.pathname !== loginPath) {
+    //
     const currentUser = await fetchUserInfo();
     return {
       fetchUserInfo,
@@ -45,6 +55,7 @@ export async function getInitialState(): Promise<{
       settings: defaultSettings,
     };
   }
+  // 当前页面是登陆页面（不返回用户信息）
   return {
     fetchUserInfo,
     settings: defaultSettings,
@@ -62,7 +73,7 @@ export const layout: RunTimeLayoutConfig = ({ initialState, setInitialState }) =
     rightContentRender: () => <RightContent />,
     disableContentMargin: false,
     waterMarkProps: {
-      content: initialState?.currentUser?.name,
+      content: initialState?.currentUser?.userName,
     },
     footerRender: () => <Footer />,
     onPageChange: () => {
