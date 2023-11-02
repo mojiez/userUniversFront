@@ -176,6 +176,25 @@ const Register: React.FC = () => {
                   },
                 ]}
               />
+              <ProFormText.Password
+                name="checkPassword"
+                fieldProps={{
+                  size: 'large',
+                  prefix: <LockOutlined className={styles.prefixIcon} />,
+                }}
+                placeholder={'再次输入密码: ant.design'}
+                rules={[
+                  {
+                    required: true,
+                    message: '再次输入！',
+                  },
+                  {
+                    min: 8,
+                    type: 'string',
+                    message: '长度不能小于8',
+                  },
+                ]}
+              />
             </>
           )}
 

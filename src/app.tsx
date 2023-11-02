@@ -14,7 +14,7 @@ const isDev = process.env.NODE_ENV === 'development';
 const loginPath = '/user/login';
 
 // 设置一个白名单
-const NO_NEED_LOGIN_WHITE_LIST = ['/user/Register', loginPath];
+const NO_NEED_LOGIN_WHITE_LIST = ['/user/register', loginPath];
 /** 获取用户信息比较慢的时候会展示一个 loading */
 export const initialStateConfig = {
   loading: <PageLoading />,
