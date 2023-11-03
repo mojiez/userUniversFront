@@ -20,6 +20,7 @@ import React, { useState } from 'react';
 import { history, useModel } from 'umi';
 import styles from './index.less';
 import { SYSTEM_LOGO, USER_ADMIN_LINK } from '@/ constants/index';
+import Link from 'antd/lib/typography/Link';
 const LoginMessage: React.FC<{
   content: string;
 }> = ({ content }) => (
@@ -242,9 +243,11 @@ const Login: React.FC = () => {
               marginBottom: 24,
             }}
           >
+            {/* <Space split={<Divider type="vertical"></>} */}
             <ProFormCheckbox noStyle name="autoLogin">
               自动登录
             </ProFormCheckbox>
+
             <a
               style={{
                 float: 'right',

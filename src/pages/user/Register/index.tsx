@@ -1,5 +1,5 @@
 import Footer from '@/components/Footer';
-import { currentUser, login } from '@/services/ant-design-pro/api';
+import { currentUser, login, register } from '@/services/ant-design-pro/api';
 import { getFakeCaptcha } from '@/services/ant-design-pro/login';
 import {
   AlipayCircleOutlined,
@@ -20,6 +20,7 @@ import React, { useState } from 'react';
 import { history, useModel } from 'umi';
 import styles from './index.less';
 import { SYSTEM_LOGO, USER_ADMIN_LINK } from '@/ constants/index';
+import { values } from 'lodash';
 const LoginMessage: React.FC<{
   content: string;
 }> = ({ content }) => (
@@ -35,69 +36,45 @@ const LoginMessage: React.FC<{
 const Register: React.FC = () => {
   const [userLoginState, setUserLoginState] = useState<API.LoginResult>({});
   const [type, setType] = useState<string>('account');
-  const { initialState, setInitialState } = useModel('@@initialState');
-  const fetchUserInfo = async () => {
-    // 异步函数
-    const userInfo = await initialState?.fetchUserInfo?.();
-    console.log('zhelishi USERINFO' + userInfo);
-    // 这行代码尝试从initial对象中获取fetchUserInfo方法
-    // 通过？来实现就算initialstate或者fetchUserInfo是null或者undefined也不会报错
-    if (userInfo) {
-      console.log(userInfo);
-      // 如果取到了userinfo 就通过setInitialState修改InitialState的值
-      await setInitialState((s) => ({
-        // s是当前InitialState的状态
-        ...s,
-        currentUser: userInfo,
-      }));
-    }
-  };
-  const handleSubmit = async (values: API.LoginParams) => {
+  // const { initialState, setInitialState } = useModel('@@initialState');
+
+  const handleRegister = async (values: API.RegisterParams) => {
     try {
-      // 登录
-      const msg = await login({
+      // 注册
+      const resp = await register({
         ...values,
         type,
       });
-      if (msg.success === true) {
-        const defaultLoginSuccessMessage = '登录成功！';
-        message.success(defaultLoginSuccessMessage);
-        // login 返回的是msg msg成功以后调用fetchUserInfo
+      // if (resp.success === true) {
 
-        // fetchUserInfo 要干两件事：
-        // 1. 查询用户信息 已经有了 message里面 第二件事是更新状态
+      //   const defaultRegisterSuccessMessage = '注册成功! ';
+      //   message.success(defaultRegisterSuccessMessage);
 
-        await fetchUserInfo();
-        // console.log(msg.data);
-        // if (msg.data) {
-        //   await setInitialState((s) => ({
-        //     ...s,
-        //     currentUser: msg.data,
-        //   }));
-        // }
-        // console.log(initialState?.currentUser);
+      //   // 跳转到用户登陆页面？
 
-        // 此时已经查询到了用户信息 并把用户状态也保存好了
-        /** 此方法会跳转到 redirect 参数所在的位置 */
-        // history 是用于管理应用程序路由的对象，如果不存在history对象，可能是没有初始化 那就直接返回
-
+      // }
+      if (resp?.data?.id > 0) {
+        const defaultRegisterSuccessMessage = '注册成功! ';
+        message.success(defaultRegisterSuccessMessage);
+        // 注册成功后跳转到 redirect 参数所在的位置
         if (!history) return;
-        // location获取当前页面的位置信息
         const { query } = history.location;
-        // 对query进行结构
         const { redirect } = query as {
           redirect: string;
         };
-        // 实现路由跳转
-        history.push(redirect || '/');
+        // 如果之前就没有重定向的话，这里的redirect就是undefined
+        // history.push('/user/login?redirect' + redirect);
+        history.push({
+          pathname: '/user/login',
+          query,
+        });
         return;
+      } else {
+        throw new Error('register error id = ${resp?.data?.id}');
       }
-      console.log(msg);
-      // 如果失败去设置用户错误信息
-      setUserLoginState(msg);
     } catch (error) {
-      const defaultLoginFailureMessage = '登录失败，请重试！';
-      message.error(defaultLoginFailureMessage);
+      const defaultRegisterFailureMessage = '注册失败，请重试';
+      message.error(defaultRegisterFailureMessage);
     }
   };
 
@@ -107,6 +84,11 @@ const Register: React.FC = () => {
     <div className={styles.container}>
       <div className={styles.content}>
         <LoginForm
+          submitter={{
+            searchConfig: {
+              submitText: '注册',
+            },
+          }}
           logo={<img alt="dick" src={SYSTEM_LOGO} />}
           title="userAtdp"
           subTitle={'userAtdp用户前台界面'}
@@ -120,7 +102,8 @@ const Register: React.FC = () => {
           //   <WeiboCircleOutlined key="WeiboCircleOutlined" className={styles.icon} />,
           // ]}
           onFinish={async (values) => {
-            await handleSubmit(values as API.LoginParams);
+            // await handleSubmit(values as API.LoginParams);
+            await handleRegister(values as API.RegisterParams);
           }}
           // 时间处理函数 在表单提交后执行 参数values是表单中的数据
           // await等待一个异步操作的完成
@@ -144,11 +127,11 @@ const Register: React.FC = () => {
                   size: 'large',
                   prefix: <UserOutlined className={styles.prefixIcon} />,
                 }}
-                placeholder={'用户名: admin or user'}
+                placeholder={'请输入账户'}
                 rules={[
                   {
                     required: true,
-                    message: '用户名是必填项！',
+                    message: '账户是必填项！',
                   },
                   {
                     min: 4,
@@ -261,10 +244,10 @@ const Register: React.FC = () => {
               marginBottom: 24,
             }}
           >
-            <ProFormCheckbox noStyle name="autoLogin">
+            {/* <ProFormCheckbox noStyle name="autoLogin">
               自动登录
-            </ProFormCheckbox>
-            <a
+            </ProFormCheckbox> */}
+            {/* <a
               style={{
                 float: 'right',
               }}
@@ -275,7 +258,7 @@ const Register: React.FC = () => {
               // 表示不要发送 HTTP Referer 头。这通常用于隐私保护，以防止链接目标网站知道您是从哪个网页跳转过去的。
             >
               忘记密码 ?
-            </a>
+            </a> */}
           </div>
         </LoginForm>
       </div>
