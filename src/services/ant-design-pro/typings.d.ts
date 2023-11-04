@@ -53,6 +53,13 @@ declare namespace API {
     data?: Record<string, any>;
   };
 
+  type LogoutResult = {
+    success?: boolean;
+    code?: number;
+    message?: string;
+    data?: Record<string, any>;
+  };
+
   type RegisterResult = {
     trpe?: string;
     success?: boolean;

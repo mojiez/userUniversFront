@@ -40,6 +40,16 @@ export async function login(body: API.LoginParams, options?: { [key: string]: an
   });
 }
 
+export async function logout(options?: { [key: string]: any }) {
+  return request<API.LogoutResult>('/user/logout', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    ...(options || {}),
+  });
+}
+
 /** 后段注册接口 */
 export async function register(body: API.RegisterParams, options?: { [key: string]: any }) {
   return request<API.RegisterResult>('/user/register', {
