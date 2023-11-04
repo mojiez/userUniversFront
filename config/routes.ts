@@ -20,9 +20,17 @@ export default [
     path: '/admin',
     name: '管理页',
     icon: 'crown',
+    // canAdmin限制了管理员才能访问 access来自access.ts文件
     access: 'canAdmin',
+
     routes: [
       { path: '/admin/sub-page', name: '二级管理页', icon: 'smile', component: './Welcome' },
+      {
+        path: '/admin/usermanage',
+        name: '用户管理',
+        icon: 'smile',
+        component: './admin/UserManage',
+      },
       { component: './404' },
     ],
   },

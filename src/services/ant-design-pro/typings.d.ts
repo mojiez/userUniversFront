@@ -124,6 +124,14 @@ declare namespace API {
     total?: number;
     success?: boolean;
   };
+  type UserList = {
+    success?: boolean;
+    code?: number;
+    message?: string;
+    data?: {
+      users: [];
+    };
+  };
 
   type NoticeIconItemType = 'notification' | 'message' | 'event';
 

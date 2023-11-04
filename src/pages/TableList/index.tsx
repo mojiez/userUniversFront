@@ -20,21 +20,21 @@ import UpdateForm from './components/UpdateForm';
  * @zh-CN 添加节点
  * @param fields
  */
-const handleAdd = async (fields: API.RuleListItem) => {
-  const hide = message.loading('正在添加');
-  try {
-    await addRule({
-      ...fields,
-    });
-    hide();
-    message.success('Added successfully');
-    return true;
-  } catch (error) {
-    hide();
-    message.error('Adding failed, please try again!');
-    return false;
-  }
-};
+// const handleAdd = async (fields: API.RuleListItem) => {
+//   const hide = message.loading('正在添加');
+//   try {
+//     await addRule({
+//       ...fields,
+//     });
+//     hide();
+//     message.success('Added successfully');
+//     return true;
+//   } catch (error) {
+//     hide();
+//     message.error('Adding failed, please try again!');
+//     return false;
+//   }
+// };
 
 /**
  * @en-US Update node
@@ -105,7 +105,7 @@ const TableList: React.FC = () => {
 
   const columns: ProColumns<API.RuleListItem>[] = [
     {
-      title: '规则名称',
+      title: '我的规矩就是规矩',
       dataIndex: 'name',
       tip: 'The rule name is the unique key',
       render: (dom, entity) => {
@@ -257,13 +257,13 @@ const TableList: React.FC = () => {
         visible={createModalVisible}
         onVisibleChange={handleModalVisible}
         onFinish={async (value) => {
-          const success = await handleAdd(value as API.RuleListItem);
-          if (success) {
-            handleModalVisible(false);
-            if (actionRef.current) {
-              actionRef.current.reload();
-            }
-          }
+          // const success = await handleAdd(value as API.RuleListItem);
+          // if (success) {
+          //   handleModalVisible(false);
+          //   if (actionRef.current) {
+          //     actionRef.current.reload();
+          //   }
+          // }
         }}
       >
         <ProFormText
